@@ -1,6 +1,6 @@
 # Belgelik
 
-**Proje sayfası:** [avfatihsozer.com/projeler/belgelik](https://avfatihsozer.com/projeler/belgelik)
+**Proje sayfası:** [avfatihsozer.com/projeler/belgelik](https://avfatihsozer.com/projeler/belgelik) · English: [README.en.md](README.en.md)
 
 Hukuk çalışması için kişisel, kendi sunucusunda çalışan bir çalışma ortamı:
 PDF ve video kütüphanesi, mevzuat okuyucu, çalışma planlayıcı ve not alma —
