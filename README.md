@@ -1,5 +1,7 @@
 # Belgelik
 
+**Proje sayfası:** [avfatihsozer.com/projeler/belgelik](https://avfatihsozer.com/projeler/belgelik)
+
 Hukuk çalışması için kişisel, kendi sunucusunda çalışan bir çalışma ortamı:
 PDF ve video kütüphanesi, mevzuat okuyucu, çalışma planlayıcı ve not alma —
 birden çok cihaz arasında senkronize, çevrimdışı öncelikli.
