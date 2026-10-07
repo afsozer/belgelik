@@ -11,9 +11,8 @@ no account system and no cloud dependency. Data is kept on a server running
 on the user's own machine, and devices connect to it over a private network
 (Tailscale).
 
-> This repository is public for **review and demonstration** purposes only.
-> No license is granted; all rights reserved. Copying, distributing or using
-> the code in other projects requires permission.
+> An open-source project licensed under the GNU Affero General Public License,
+> version 3 only (`AGPL-3.0-only`); see [License](#license) below.
 
 ## Features
 
@@ -92,3 +91,13 @@ schedule → annotation → desktop interface → sync robustness, backups,
 tests/CI → legislation module. Design and product decisions belong to the
 project owner; the implementation was developed with AI-assisted coding tools
 (Claude Code).
+
+## License
+
+Licensed under the GNU Affero General Public License, version 3 only
+(`AGPL-3.0-only`); the full text is in [LICENSE](LICENSE). If you modify the
+software and offer it to others over a network, you must make your modified
+source code available to those users under the same licence. See
+[SECURITY.md](SECURITY.md) for how to report a vulnerability.
+
+Copyright © 2026 Alpaslan Fatih Sözer

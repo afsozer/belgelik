@@ -10,9 +10,8 @@ Tek kullanıcılı, kişisel kullanım için tasarlandı; mağaza yayını, üye
 sistemi ya da bulut bağımlılığı yok. Veriler kullanıcının kendi makinesinde
 duran sunucuda tutulur, cihazlar ona özel ağ (Tailscale) üzerinden bağlanır.
 
-> Bu repo yalnızca **inceleme ve gösterim** amacıyla açıktır. Bir lisans
-> verilmemiştir; tüm hakları saklıdır. Kodun kopyalanması, dağıtılması veya
-> başka projelerde kullanılması izne tabidir.
+> GNU Affero Genel Kamu Lisansı sürüm 3 (`AGPL-3.0-only`) ile lisanslanmış açık kaynak
+> bir projedir; ayrıntı aşağıdaki [Lisans](#lisans) bölümünde.
 
 ## Özellikler
 
@@ -86,3 +85,13 @@ fazlar halinde geliştirildi: PDF okuyucu → senkronizasyon → pomodoro ve der
 programı → işaretleme → masaüstü arayüzü → senkron sağlamlığı, yedekleme,
 testler/CI → mevzuat modülü. Tasarım ve ürün kararları proje sahibine aittir;
 uygulama yapay zekâ destekli kodlama araçlarıyla (Claude Code) geliştirilmiştir.
+
+## Lisans
+
+GNU Affero Genel Kamu Lisansı sürüm 3 ile lisanslanmıştır (`AGPL-3.0-only`); tam
+metin [LICENSE](LICENSE) dosyasındadır. Yazılımı değiştirip ağ üzerinden başkalarına
+hizmet olarak sunarsanız, değiştirdiğiniz kaynak kodu da o kullanıcılara aynı lisansla
+sunmanız gerekir. Güvenlik açıklarının nasıl bildirileceği [SECURITY.md](SECURITY.md)
+dosyasında anlatılıyor.
+
+Telif hakkı © 2026 Alpaslan Fatih Sözer

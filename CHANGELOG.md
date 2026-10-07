@@ -1,5 +1,10 @@
 # Değişiklik Günlüğü
 
+## Yayımlanmamış — Açık kaynak
+
+- Lisans AGPL-3.0-only oldu (7 Eki 2026): `LICENSE` eklendi, README'lerdeki "tüm hakları saklıdır" bildirimi ve uygulama telif satırları (macOS, Windows) güncellendi.
+- `SECURITY.md` eklendi: tek güvenlik bakımcısı, GitHub üzerinden gizli açık bildirimi, yanıt süreleri, koordineli açıklama ve kapsam.
+
 ## 1.14.11+52 — Ders programına kanun bağlantısı + yeni kanunlar
 
 - Ders ekranında "Kanunlar" bölümü: derse ait kanun tek dokunuşla açılıyor, indirilmemişse indirip açıyor (Anayasa→2709, Medeni→TMK, İş→4857, Milletlerarası→MÖHUK vb.).
