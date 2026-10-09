@@ -19,7 +19,7 @@
   21 ve 22, 28'den önce bitmelidir; 25–27 ise 21–22'ye bağımlı değildir (PDF kaynaklı kartlarla çalışır).
 
 ### Kapsam dışı (yapılmayacak)
-- İçtihat/karar arama (bunun için Emsal-mcp + AgentBridge cowork zaten var).
+- İçtihat/karar arama (bunun için Dayanak + AgentBridge cowork zaten var).
 - Mevzuat metninin uygulama İÇİNDEN internetten çekilmesi (tablet yalnızca sunucudan bundle indirir).
 - FSRS algoritması (ilk sürümde SM-2; `review_log` ham tutulduğu için sonradan geçiş mümkün).
 - Kart paylaşımı, deck import/export (Anki uyumluluğu vb.).
@@ -37,7 +37,7 @@
 | Numaralı migrasyonlar | Faz 20 düzeni | Her yeni tablo numaralı migration ile gelir |
 | Flutter istemci | `app/lib/` | Yeni ekranlar mevcut navigasyon/tema düzenine uyar |
 | Kimlik doğrulama | `X-Auth-Token` header, Tailscale ağı | Aynen |
-| Emsal-mcp | `<EMSAL-MCP-KLASORU>` (v5.x) | PC tarafı mevzuat ingest'inin TEK veri kaynağı |
+| Dayanak | `<DAYANAK-KLASORU>` (v5.x) | PC tarafı mevzuat ingest'inin TEK veri kaynağı |
 
 > **Ajan talimatı:** SyncSpec eklerken `server/routers/sync.py` içindeki mevcut
 > `positions` / `annotations` örneklerini birebir şablon al. `pull_where` her zaman
@@ -74,16 +74,16 @@ Kurallar:
 
 ### [x] Faz 21 — Mevzuat Ingest ve Parser (yalnız PC / sunucu tarafı)
 
-**Amaç:** Emsal-mcp'den çekilen ham kanun metnini, madde bazlı yapılandırılmış ve
+**Amaç:** Dayanak'tan çekilen ham kanun metnini, madde bazlı yapılandırılmış ve
 versiyonlanmış olarak sunucu SQLite'ına yazmak. Bu fazda Flutter'a DOKUNULMAZ.
 
 **Yapılacaklar:**
 1. `server/mevzuat_ingest.py` script'i:
    - Girdi: mevzuat no listesi (başlangıç seti: **2709 Anayasa, 4721 TMK, 6098 TBK,
      6102 TTK, 6100 HMK, 5237 TCK, 5271 CMK, 2577 İYUK, 2004 İİK**).
-   - Kaynak: Emsal-mcp'nin mevzuat araçları (`get_legislation` MCP aracı veya CLI karşılığı).
-     Komut arayüzünü `Emsal-mcp/docs/` ve `emsal-mcp --help` üzerinden DOĞRULA; varsayma.
-   - Emsal-mcp kırmızı çizgisi geçerlidir: tam metni olmayan mevzuat ingest EDİLMEZ, uydurulmaz.
+   - Kaynak: Dayanak'ın mevzuat araçları (`get_legislation` MCP aracı veya CLI karşılığı).
+     Komut arayüzünü `dayanak/docs/` ve `dayanak --help` üzerinden DOĞRULA; varsayma.
+   - Dayanak kırmızı çizgisi geçerlidir: tam metni olmayan mevzuat ingest EDİLMEZ, uydurulmaz.
 2. Parser (`server/mevzuat_parser.py`, saf Python, ağ erişimi yok):
    - Ham metin → `kanun → kısım/bölüm başlıkları → madde → fıkra` ağacı.
    - Madde başlığı, numarası (geçici/ek/mükerrer/mülga dahil), fıkra ayrımı.
@@ -160,7 +160,7 @@ silinen not tombstone ile diğer cihazdan da düşer.
      Hedef kanun cihazda indirilmemişse "indir" önerisi gösterilir.
    - Yanlış pozitif riskine karşı: link üretimi yalnız görüntülemede, metni asla değiştirmez.
 2. **Resmî Gazete izleyici (PC tarafı):**
-   - `server/mevzuat_watch.py`: izlenen kanunlar için Emsal-mcp RG kaynağını tarar
+   - `server/mevzuat_watch.py`: izlenen kanunlar için Dayanak RG kaynağını tarar
      (haftalık; Windows Görev Zamanlayıcı girdisi `server/RESTORE.md`'ye eklenir).
    - Değişiklik saptanırsa: yeniden ingest → `snapshot_version++` → değişen maddelerin
      diff'i `legislation_change(madde_ref, old_version, new_version, degisiklik_ozeti)` tablosuna.
@@ -294,8 +294,8 @@ Faz 25 ──► Faz 26 ──► Faz 27 ───┘
    (gerekiyorsa yeni tablo + join).
 5. Belirsizlikte varsayım yapılmaz; soru bu dosyaya "AÇIK SORU" bloğu olarak işlenir ve sorulur.
 6. Her faz sonunda `CHANGELOG` girdisi + bu dosyada fazın başına `[x]` işareti.
-7. Emsal-mcp'ye HTTP ile değil, kendi CLI/MCP arayüzüyle erişilir; mevzuat kaynağına
-   doğrudan scraper yazılmaz (rate-limit ve format sorumluluğu Emsal-mcp'dedir).
+7. Dayanak'a HTTP ile değil, kendi CLI/MCP arayüzüyle erişilir; mevzuat kaynağına
+   doğrudan scraper yazılmaz (rate-limit ve format sorumluluğu Dayanak'tadır).
 8. Testler: sunucu `pytest` (`run-tests.ps1` düzenine eklenir), Flutter `flutter test`;
    parser golden dosyaları `server/test/fixtures/mevzuat/` altında tutulur.
 

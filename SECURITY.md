@@ -56,7 +56,7 @@ Out of scope:
 
 - the accuracy or completeness of legislation texts, which is a data-quality
   question rather than a security one (please open a normal issue);
-- vulnerabilities in Emsal MCP, which Belgelik uses to fetch legislation; please
+- vulnerabilities in Dayanak (formerly Emsal MCP), which Belgelik uses to fetch legislation; please
   report those under that project's own security policy;
 - publicly known vulnerabilities in third-party dependencies, unless Belgelik
   uses the dependency in a way that makes them exploitable;

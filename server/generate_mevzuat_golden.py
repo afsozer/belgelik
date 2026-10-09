@@ -1,4 +1,4 @@
-"""Generate pinned real-text parser fixtures from Emsal-mcp.
+"""Generate pinned real-text parser fixtures from Dayanak.
 
 Generated files are review artifacts. Run intentionally when the official
 source snapshot changes; never update them implicitly from the test suite.
@@ -13,9 +13,10 @@ import json
 from pathlib import Path
 
 from mevzuat_ingest import (
+    DAYANAK_COMMAND,
     DEFAULT_LAWS,
     OFFICIAL_FINAL_ARTICLE,
-    _add_emsal_python_paths,
+    _add_dayanak_python_paths,
     _search_document_id,
     fetch_full_text,
 )
@@ -25,13 +26,13 @@ from mevzuat_parser import parse_legislation
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", type=Path, default=Path(__file__).parent / "test" / "fixtures" / "mevzuat")
-    parser.add_argument("--emsal-command", default="emsal-mcp")
+    parser.add_argument("--dayanak-command", "--emsal-command", dest="dayanak_command", default=DAYANAK_COMMAND)
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
-    _add_emsal_python_paths(args.emsal_command)
+    _add_dayanak_python_paths(args.dayanak_command)
     manifest = {}
     for law_no in DEFAULT_LAWS:
-        document_id, _ = _search_document_id(law_no, args.emsal_command)
+        document_id, _ = _search_document_id(law_no, args.dayanak_command)
         document = fetch_full_text(document_id)
         text = document["text"].strip()
         parsed = parse_legislation(text, law_no)

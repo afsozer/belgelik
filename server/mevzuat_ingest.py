@@ -1,6 +1,6 @@
-"""Ingest full legislation through the installed Emsal-mcp source adapter.
+"""Ingest full legislation through the installed Dayanak source adapter.
 
-This module has no HTTP scraper.  It uses Emsal-mcp's own search and source
+This module has no HTTP scraper.  It uses Dayanak's own search and source
 client interfaces, stores the raw snapshot, and refuses incomplete documents.
 """
 
@@ -35,6 +35,9 @@ DEFAULT_LAWS = {
     "5718": ("Milletlerarası Özel Hukuk ve Usul Hukuku Hakkında Kanun", "MÖHUK"),
 }
 
+# Dayanak CLI (eski adi emsal-mcp).  DAYANAK_CLI > eski EMSAL_MCP > "dayanak".
+DAYANAK_COMMAND = os.environ.get("DAYANAK_CLI") or os.environ.get("EMSAL_MCP") or "dayanak"
+
 # Official terminal article numbers. This is a completeness gate, not an
 # inferred article count: extra/temporary/lettered articles may make the parsed
 # row count larger, but a document ending before this number is incomplete.
@@ -45,11 +48,11 @@ OFFICIAL_FINAL_ARTICLE = {
 }
 
 
-def _search_document_id(mevzuat_no: str, emsal_command: str = "emsal-mcp") -> tuple[str, dict[str, Any]]:
+def _search_document_id(mevzuat_no: str, dayanak_command: str = DAYANAK_COMMAND) -> tuple[str, dict[str, Any]]:
     proc = None
     for attempt in range(4):
         proc = subprocess.run(
-            [emsal_command, "legislation", "search", mevzuat_no, "--limit", "20", "--json"],
+            [dayanak_command, "legislation", "search", mevzuat_no, "--limit", "20", "--json"],
             capture_output=True, text=True, encoding="utf-8", check=False,
         )
         if proc.returncode == 0 and "429" not in proc.stdout:
@@ -60,7 +63,7 @@ def _search_document_id(mevzuat_no: str, emsal_command: str = "emsal-mcp") -> tu
         break
     assert proc is not None
     if proc.returncode != 0:
-        raise RuntimeError(f"Emsal-mcp search başarısız ({mevzuat_no}): {proc.stderr.strip()}")
+        raise RuntimeError(f"Dayanak search başarısız ({mevzuat_no}): {proc.stderr.strip()}")
     payload = json.loads(proc.stdout)
     candidates = [
         item for item in payload.get("results", [])
@@ -68,7 +71,7 @@ def _search_document_id(mevzuat_no: str, emsal_command: str = "emsal-mcp") -> tu
         and "YÜRÜRLÜKTEN KALDIRILMIŞ" not in str(item.get("title", "")).upper()
     ]
     if not candidates:
-        raise RuntimeError(f"Emsal-mcp tam eşleşen mevzuat bulamadı: {mevzuat_no}")
+        raise RuntimeError(f"Dayanak tam eşleşen mevzuat bulamadı: {mevzuat_no}")
     expected_title = DEFAULT_LAWS.get(mevzuat_no, ("", ""))[0].upper()
     candidates.sort(
         key=lambda item: (
@@ -81,8 +84,12 @@ def _search_document_id(mevzuat_no: str, emsal_command: str = "emsal-mcp") -> tu
 
 
 async def _fetch_full_text(document_id: str) -> dict[str, Any]:
-    # This is Emsal-mcp's installed adapter, not a second scraper.
-    from emsal_mcp.sources.registry import get_source
+    # This is Dayanak's installed adapter, not a second scraper.  Dayanak was
+    # called emsal-mcp before 2.0.0; an older install still exposes emsal_mcp.
+    try:
+        from dayanak.sources.registry import get_source
+    except ImportError:
+        from emsal_mcp.sources.registry import get_source
 
     source = get_source("mevzuat")
     doc = None
@@ -98,11 +105,11 @@ async def _fetch_full_text(document_id: str) -> dict[str, Any]:
             delay = min(60.0, max(2.0, float(retry_after or (2 ** (attempt + 2)))))
             await asyncio.sleep(delay)
     if doc is None:
-        raise RuntimeError(f"Emsal-mcp belgeyi döndürmedi: {document_id}")
+        raise RuntimeError(f"Dayanak belgeyi döndürmedi: {document_id}")
     text = doc.text
-    # Emsal-mcp currently converts HTML with lxml. Some very large official
+    # Dayanak currently converts HTML with lxml. Some very large official
     # texts contain malformed nesting; lxml closes the document early although
-    # the adapter's raw base64 HTML is complete. Reparse that SAME Emsal-mcp
+    # the adapter's raw base64 HTML is complete. Reparse that SAME Dayanak
     # response with BeautifulSoup's tolerant stdlib-backed html.parser. This is
     # not a second scraper and performs no additional network access.
     raw = doc.raw if isinstance(doc.raw, dict) else {}
@@ -120,7 +127,7 @@ async def _fetch_full_text(document_id: str) -> dict[str, Any]:
             if len(tolerant_text) > len(text):
                 text = tolerant_text
         except Exception as exc:
-            raise RuntimeError(f"Emsal-mcp ham mevzuat HTML'i dönüştürülemedi: {exc}") from exc
+            raise RuntimeError(f"Dayanak ham mevzuat HTML'i dönüştürülemedi: {exc}") from exc
     return {
         "document_id": doc.document_id,
         "title": doc.title,
@@ -136,37 +143,44 @@ def fetch_full_text(document_id: str) -> dict[str, Any]:
     return asyncio.run(_fetch_full_text(document_id))
 
 
-def _add_emsal_python_paths(emsal_command: str) -> None:
-    """Allow the server venv to use a separately installed emsal-mcp CLI."""
-    try:
-        import emsal_mcp  # noqa: F401
+def _dayanak_importable() -> bool:
+    for module in ("dayanak", "emsal_mcp"):
+        try:
+            __import__(module)
+            return True
+        except ImportError:
+            continue
+    return False
+
+
+def _add_dayanak_python_paths(dayanak_command: str) -> None:
+    """Allow the server venv to use a separately installed Dayanak CLI."""
+    if _dayanak_importable():
         return
-    except ImportError:
-        pass
-    executable = shutil.which(emsal_command) or emsal_command
+    executable = shutil.which(dayanak_command) or dayanak_command
     exe_path = Path(executable).resolve()
+    source = os.environ.get("DAYANAK_SOURCE") or os.environ.get("EMSAL_MCP_SOURCE")
     candidates = [
-        Path(os.environ["EMSAL_MCP_SOURCE"]) / "src"
-        if os.environ.get("EMSAL_MCP_SOURCE") else None,
-        Path.home() / "Emsal-mcp" / "src",
+        Path(source) / "src" if source else None,
+        Path.home() / "dayanak" / "src",
+        Path.home() / "Dayanak" / "src",
         exe_path.parent.parent / "Lib" / "site-packages",
+        exe_path.parent.parent / "lib",
     ]
     for candidate in candidates:
         if candidate and candidate.exists() and str(candidate) not in sys.path:
             sys.path.insert(0, str(candidate))
-    try:
-        import emsal_mcp  # noqa: F401
-    except ImportError as exc:
+    if not _dayanak_importable():
         raise RuntimeError(
-            "emsal_mcp Python paketi bulunamadı; EMSAL_MCP_SOURCE veya EMSAL_MCP_PYTHON ayarlayın"
-        ) from exc
+            "dayanak Python paketi bulunamadı; DAYANAK_SOURCE ayarlayın ya da --dayanak-command verin"
+        )
 
 
 def ingest_one(
     conn,
     mevzuat_no: str,
     *,
-    emsal_command: str = "emsal-mcp",
+    dayanak_command: str = DAYANAK_COMMAND,
     fixture_dir: Path | None = None,
 ) -> dict[str, Any]:
     if fixture_dir is not None:
@@ -186,8 +200,8 @@ def ingest_one(
         }
         document = {"document_id": document_id, "text": text, "content_status": "full"}
     else:
-        _add_emsal_python_paths(emsal_command)
-        document_id, search_meta = _search_document_id(mevzuat_no, emsal_command)
+        _add_dayanak_python_paths(dayanak_command)
+        document_id, search_meta = _search_document_id(mevzuat_no, dayanak_command)
         document = fetch_full_text(document_id)
     text = str(document.get("text") or "")
     status = str(document.get("content_status") or "")
@@ -254,11 +268,11 @@ def ingest_one(
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Emsal-mcp üzerinden mevzuat ingest")
+    parser = argparse.ArgumentParser(description="Dayanak üzerinden mevzuat ingest")
     parser.add_argument("--mevzuat-no", action="append", dest="numbers", help="Tekrarlanabilir mevzuat numarası")
     parser.add_argument("--db", type=Path, help="Hedef SQLite DB; verilmezse profil DB'leri kullanılır")
     parser.add_argument("--fixture-dir", type=Path, help="Hash doğrulamalı sabit gerçek metinleri ağ yerine kullan")
-    parser.add_argument("--emsal-command", default=os.environ.get("EMSAL_MCP", "emsal-mcp"))
+    parser.add_argument("--dayanak-command", "--emsal-command", dest="dayanak_command", default=DAYANAK_COMMAND)
     args = parser.parse_args(argv)
     numbers = args.numbers or list(DEFAULT_LAWS)
     unknown = [number for number in numbers if number not in DEFAULT_LAWS]
@@ -274,7 +288,7 @@ def main(argv: list[str] | None = None) -> int:
             run_migrations(conn)
             for number in numbers:
                 with conn:
-                    result = ingest_one(conn, number, emsal_command=args.emsal_command, fixture_dir=args.fixture_dir)
+                    result = ingest_one(conn, number, dayanak_command=args.dayanak_command, fixture_dir=args.fixture_dir)
                 print(json.dumps(result, ensure_ascii=True))
         finally:
             conn.close()
@@ -284,7 +298,7 @@ def main(argv: list[str] | None = None) -> int:
             with core.use_profile(profile), core.db() as conn:
                 for number in numbers:
                     with conn:
-                        result = ingest_one(conn, number, emsal_command=args.emsal_command, fixture_dir=args.fixture_dir)
+                        result = ingest_one(conn, number, dayanak_command=args.dayanak_command, fixture_dir=args.fixture_dir)
                     print(json.dumps(result, ensure_ascii=True))
     return 0
 

@@ -29,6 +29,6 @@ Windows Görev Zamanlayıcı’da haftalık çalıştırılabilecek komut:
 server\.venv\Scripts\python.exe server\mevzuat_watch.py --db server\data\<profil>\app.db
 ```
 
-Bu komut yalnızca Emsal-mcp üzerinden yenileme yapar; doğrudan mevzuat sitesi
-scraper’ı değildir. Emsal-mcp Resmî Gazete adaptörü arama desteği kazandığında
+Bu komut yalnızca Dayanak üzerinden yenileme yapar; doğrudan mevzuat sitesi
+scraper’ı değildir. Dayanak Resmî Gazete adaptörü arama desteği kazandığında
 watcher aynı ingest/diff akışını kullanacaktır.

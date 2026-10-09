@@ -94,7 +94,7 @@ def _article_parts(raw_number: str) -> tuple[str, str]:
 def parse_legislation(text: str, mevzuat_no: str) -> ParsedLegislation:
     text = _clean_text(text)
     raw_lines = text.splitlines()
-    # Emsal-mcp's HTML-to-Markdown output occasionally puts ``Madde`` and its
+    # Dayanak's HTML-to-Markdown output occasionally puts ``Madde`` and its
     # number on adjacent lines.  Join only this unambiguous marker pair.
     lines: list[str] = []
     index = 0
