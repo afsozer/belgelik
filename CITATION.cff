@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "Bu yazılımı kullanırsanız lütfen aşağıdaki künyeyle atıf yapın. If you use this software, please cite it as below."
+type: software
+title: "Belgelik"
+abstract: >-
+  Personal, self-hosted and offline-first study environment for legal work:
+  a PDF and video library, a legislation reader that parses law texts down to
+  article, paragraph and subparagraph level, a study planner and note-taking,
+  synchronized across devices. Flutter client (Android, iOS, macOS, Windows,
+  Linux) and a Python/FastAPI server running on the user's own machine.
+authors:
+  - family-names: "Sözer"
+    given-names: "Alpaslan Fatih"
+version: "1.14.12"
+date-released: "2026-10-23"
+license: AGPL-3.0-only
+repository-code: "https://github.com/afsozer/belgelik"
+keywords:
+  - legal-research
+  - legislation
+  - turkish-law
+  - pdf-reader
+  - offline-first
+  - flutter
+  - fastapi
+  - self-hosted

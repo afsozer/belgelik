@@ -1,7 +1,8 @@
 # Değişiklik Günlüğü
 
-## Yayımlanmamış — Açık kaynak
+## 1.14.12+53 - 23 Eki 2026 - Açık kaynak ve Zenodo DOI
 
+- Atıf künyesi: `CITATION.cff` (GitHub "Cite this repository") ve `.zenodo.json` (Zenodo arşivi ve DOI) eklendi.
 - Lisans AGPL-3.0-only oldu (7 Eki 2026): `LICENSE` eklendi, README'lerdeki "tüm hakları saklıdır" bildirimi ve uygulama telif satırları (macOS, Windows) güncellendi.
 - `SECURITY.md` eklendi: tek güvenlik bakımcısı, GitHub üzerinden gizli açık bildirimi, yanıt süreleri, koordineli açıklama ve kapsam.
 - Mevzuat ingest artık Dayanak'ı (eski adı emsal-mcp) kullanıyor (10 Eki 2026): varsayılan komut `dayanak`, bayrak `--dayanak-command`, ortam değişkenleri `DAYANAK_CLI` / `DAYANAK_SOURCE`. Eski `--emsal-command`, `EMSAL_MCP`, `EMSAL_MCP_SOURCE` ve `emsal_mcp` modülü yedek olarak çalışmaya devam ediyor.

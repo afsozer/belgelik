@@ -1,0 +1,28 @@
+{
+  "title": "Belgelik: self-hosted, offline-first study environment for legal work",
+  "upload_type": "software",
+  "creators": [
+    {
+      "name": "Sözer, Alpaslan Fatih"
+    }
+  ],
+  "description": "<p>Belgelik is a personal, self-hosted study environment for legal work: a PDF and video library, a legislation reader, a study planner and note-taking, synchronized across multiple devices and offline-first. Law texts are parsed down to article, paragraph and subparagraph level, stored on the device for offline full-text search, and references to laws and articles become clickable links; changed articles are detected on re-import. The Flutter client runs on Android, iOS, macOS, Windows and Linux; the Python/FastAPI server runs on the user's own machine with per-profile databases, and devices reach it over a private network. Changes are written locally first and synchronized from a queue with record-level last-write-wins conflict resolution.</p><p>Belgelik, hukuk çalışması için kendi sunucusunda çalışan, çevrimdışı öncelikli bir çalışma ortamıdır: PDF ve video kütüphanesi, mevzuat okuyucu, çalışma planlayıcı ve not alma, birden fazla cihaz arasında eşitlenir. Kanun metinleri madde, fıkra ve bent düzeyine kadar ayrıştırılır, cihazda çevrimdışı tam metin aramasıyla saklanır; madde metnindeki kanun ve madde atıfları tıklanabilir bağlantıya dönüşür. İstemci Flutter, sunucu Python/FastAPI ile yazılmıştır.</p>",
+  "keywords": [
+    "legal-research",
+    "legislation",
+    "turkish-law",
+    "pdf-reader",
+    "offline-first",
+    "flutter",
+    "fastapi",
+    "self-hosted"
+  ],
+  "language": "eng",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/afsozer/belgelik",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}
