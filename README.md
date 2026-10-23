@@ -1,5 +1,7 @@
 # Belgelik
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23603697.svg)](https://doi.org/10.5281/zenodo.23603697)
+
 **Proje sayfası:** [avfatihsozer.com/projeler/belgelik](https://avfatihsozer.com/projeler/belgelik) · English: [README.en.md](README.en.md)
 
 Hukuk çalışması için kişisel, kendi sunucusunda çalışan bir çalışma ortamı:

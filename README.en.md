@@ -1,5 +1,7 @@
 # Belgelik
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23603697.svg)](https://doi.org/10.5281/zenodo.23603697)
+
 **Project page:** [avfatihsozer.com/en/projects/belgelik](https://avfatihsozer.com/en/projects/belgelik) · Türkçe: [README.md](README.md)
 
 A personal, self-hosted study environment for legal work: a PDF and video
